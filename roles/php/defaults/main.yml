@@ -1,0 +1,21 @@
+fpm_user: http
+fpm_group: http
+fpm_listen: unix:/run/php-fpm/php-fpm.sock
+fpm_log_path: /var/log/php
+
+php_ini:
+  'date.timezone': "Europe/Berlin"
+  'memory_limit': 1024M
+  'max_execution_time': 300
+  'request_terminate_timeout': 300
+  'upload_max_filesize': 2048M
+  'post_max_size': 2048M
+  'display_error': 'Off'
+  'session.name': 'sid'
+  'session.use_cookies': 0
+  'session.use_trans_sid': 0
+  'url_rewriter.tags':
+  'magic_quotes_runtime': 0
+  'session.gc_maxlifetime': 36000
+  'default_socket_timeout': 5
+  'sendmail_path': sendmail -t -i

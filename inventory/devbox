@@ -1,0 +1,5 @@
+[home]
+devbox
+
+[home:vars]
+ansible_connection=local

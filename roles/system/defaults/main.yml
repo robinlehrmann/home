@@ -1,0 +1,3 @@
+---
+hostname: home.local
+sshd_port: 10022

@@ -1,0 +1,46 @@
+---
+- name: ensure hostname is set
+  hostname:
+    name: '{{ hostname }}'
+
+- name: ensure locale env vars exists
+  copy:
+    content: 'LANG=de_DE.UTF-8'
+    dest: /etc/locale.conf
+
+- name: ensure locale exists
+  locale_gen:
+    name: 'de_DE.UTF-8'
+
+- name: ensure timezone set
+  timezone:
+    name: Europe/Berlin
+
+- name: ensure /etc/hosts exists
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+
+- name: ensure sshd port is changed
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^Port'
+    line: 'Port {{ sshd_port }}'
+  notify:
+    - restart ssh server
+
+- include: "{{ ansible_distribution }}.yml"
+
+- name: ensure required packages are installed
+  package:
+    name: "{{ system_packages }}"
+    state: present
+
+- name: ensure required services are enabled
+  systemd:
+    name: "{{ item }}"
+    enabled: true
+  loop: "{{ system_services }}"
+  when: system_services|length != 0
+  notify:
+    - 'restart services'

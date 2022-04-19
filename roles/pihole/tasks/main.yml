@@ -1,0 +1,22 @@
+---
+- name: ensure pihole is installed
+  command: yay -Ss pi-hole-server
+
+- name: ensure read and write permissions are granted
+  lineinfile:
+    path: /etc/pihole/pihole-FTL.conf
+    regexp: '^{{ item.key }}'
+    value: '{{ item.key }}={{ item.value }}'
+  loop:
+    - { key: 'DBINTERVAL', value: '60.0' }
+    - { key: 'PRIVACYLEVEL', value: '3' }
+
+- name: copy pihole vhost file
+  copy:
+    path: /usr/share/pihole/configs/nginx.example.conf
+    dest: /etc/nginx/vhost.d/pihole.conf
+
+- name: create drop-in-file for php-fpm
+  file:
+    src: pihole.conf
+    dest: /etc/systemd/system/php-fpm.service.d/pihole.conf

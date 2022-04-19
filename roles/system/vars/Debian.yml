@@ -1,0 +1,6 @@
+---
+system_packages:
+  - 'git'
+  - 'npm'
+  - 'nano'
+system_services: []

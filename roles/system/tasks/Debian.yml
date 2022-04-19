@@ -1,0 +1,20 @@
+---
+- name: ensure exim4 is absent
+  apt:
+    name: exim4
+    state: absent
+    purge: yes
+
+- name: kill exim4
+  command: "pkill -f exim4"
+
+- name: ensure apache2 is stopped
+  systemd:
+    name: apache2
+    state: stopped
+
+- name: ensure apache2 is absent
+  apt:
+    name: apache2
+    state: absent
+    purge: yes

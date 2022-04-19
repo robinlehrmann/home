@@ -1,0 +1,16 @@
+---
+- name: restart fstrim.timer
+  systemd:
+    name: fstrim.timer
+    state: restarted
+
+- name: restart ssh server
+  systemd:
+    name: ssh
+    state: restarted
+
+- name: restart services
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+  loop: "{{ system_packages }}"

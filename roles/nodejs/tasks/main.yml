@@ -1,0 +1,7 @@
+---
+- name: ensure nodejs is installed
+  package:
+    name:
+      - nodejs
+      - yarn
+    state: present

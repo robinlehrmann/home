@@ -1,0 +1,33 @@
+---
+- name: ensure zsh is installed
+  package:
+    name: zsh
+    state: present
+
+- name: oh-my-zsh is installed
+  stat:
+    path: /tmp/zsh-install.sh
+  register: ohmyzsh
+
+- name: download ohmyzsh
+  get_url:
+    url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+    dest: /tmp/zsh-install.sh
+    mode: '0400'
+  when: ohmyzsh.stat.isdir is defined and ohmyzsh.stat.isdir
+
+- name: install ohmyzsh
+  command: sh /tmp/zsh-install.sh
+  when: ohmyzsh.stat.isdir is defined and ohmyzsh.stat.isdir
+
+- name: change shell of root user
+  user:
+    name: root
+    shell: /bin/zsh
+
+- name: change oh-my-zsh theme
+  lineinfile:
+    path: /root/.zshrc
+    regexp: '^ZSH_THEME'
+    line: 'ZSH_THEME="agnoster"'
+    create: yes

@@ -1,0 +1,17 @@
+---
+- hosts: home
+  pre_tasks:
+    - name: Wait 300 seconds, but only start checking after 5 seconds
+      wait_for_connection:
+        delay: 5
+        timeout: 300
+  tasks:
+    - name: update cache
+      package:
+        update_cache: true
+      become: true
+    - name: upgrade
+      package:
+        upgrade: dist
+        force_apt_get: yes
+      become: true

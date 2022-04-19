@@ -1,0 +1,5 @@
+---
+- name: Restart iobroker
+  service:
+    name: "{{ iobroker_service }}"
+    state: restarted

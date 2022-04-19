@@ -1,0 +1,14 @@
+---
+system_packages:
+  - 'acpid'
+  - 'dbus'
+  - 'avahi'
+  - 'cups'
+  - 'git'
+  - 'base-devel'
+  - 'npm'
+system_services:
+  - 'acpid'
+  - 'avahi-daemon'
+  - 'cronie'
+  - 'fstrim.timer'

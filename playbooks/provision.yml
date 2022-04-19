@@ -1,0 +1,34 @@
+---
+- hosts: home
+  pre_tasks:
+    - name: Wait 300 seconds, but only start checking after 5 seconds
+      wait_for_connection:
+        delay: 5
+        timeout: 300
+  tasks:
+    - name: ensure system is installed
+      include_role:
+        name: system
+        vars_from: "{{ ansible_distribution }}"
+        apply:
+          become: true
+    - name: ensure zsh is installed
+      include_role:
+        name: zsh
+        apply:
+          become: true
+    - name: ensure docker is installed
+      include_role:
+        name: docker
+        apply:
+          become: true
+    - name: ensure pihole is installed
+      include_role:
+        name: pihole
+        apply:
+          become: true
+    - name: ensure mysql is installed
+      include_role:
+        name: mysql
+        apply:
+          become: true
