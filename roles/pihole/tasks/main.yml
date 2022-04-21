@@ -1,6 +1,7 @@
 ---
 - name: ensure pihole is installed
-  command: yay -Ss pi-hole-server
+  become_user: yay
+  command: yay -S pi-hole-server --noconfirm
 
 - name: ensure read and write permissions are granted
   lineinfile:
@@ -11,12 +12,28 @@
     - { key: 'DBINTERVAL', value: '60.0' }
     - { key: 'PRIVACYLEVEL', value: '3' }
 
-- name: copy pihole vhost file
-  copy:
-    path: /usr/share/pihole/configs/nginx.example.conf
-    dest: /etc/nginx/vhost.d/pihole.conf
+- name: ensure pihole vhost file for nginx exists
+  template:
+    src: pihole-nginx.conf.j2
+    dest: /etc/nginx/vhosts.d/pihole.conf
+
+- name: ensure directory for systemd service exists
+  file:
+    path: /usr/lib/systemd/system/php-fpm.service.d
+    state: directory
+
+- name: reload systemd config
+  systemd:
+    daemon_reload: yes
 
 - name: create drop-in-file for php-fpm
-  file:
+  copy:
     src: pihole.conf
-    dest: /etc/systemd/system/php-fpm.service.d/pihole.conf
+    dest: /usr/lib/systemd/system/php-fpm.service.d/pihole.conf
+  notify:
+    - restart php-fpm
+
+- name: update adlists
+  copy:
+    src: adlists.list
+    dest: /etc/pihole/adlists.list

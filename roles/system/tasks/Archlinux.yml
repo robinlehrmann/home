@@ -19,26 +19,36 @@
     - { key: 'KEYMAP', value: 'de-latin1' }
     - { key: 'FONT', value: 'lat9w-16' }
 
-- name: gather package facts
+- name: ensure git is installed
+  package:
+    name: git
+    state: present
+
+- name: check existing packages
   package_facts:
     manager: auto
 
+- name: create yay user
+  user:
+    name: yay
+    shell: /bin/bash
+
+- name: allow package user to execute every command with sudo
+  lineinfile:
+    path: /etc/sudoers
+    regexp: "^yay"
+    line: "yay     ALL = NOPASSWD: ALL"
+
 - name: ensure yay is cloned.
-  become: false
+  become_user: yay
   git:
     repo: 'https://aur.archlinux.org/yay.git'
     dest: /tmp/yay
   when: "'yay' not in ansible_facts.packages"
 
 - name: ensure yay is installed.
-  become: false
-  command: makepkg -si --noconfirm
+  become_user: yay
+  command: makepkg -sif --noconfirm
   args:
     chdir: /tmp/yay
-  when: "'yay' not in ansible_facts.packages"
-
-- name: ensure yay sources are absent.
-  file:
-    path: /tmp/yay
-    state: absent
   when: "'yay' not in ansible_facts.packages"

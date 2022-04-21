@@ -7,26 +7,39 @@
      - php-intl
      - php-gd
      - php-apcu
+     - php-sqlite
+     - sqlite
     state: present
   notify:
     - restart php-fpm
 
 - name: ensure php.ini settings.
   lineinfile:
-    dest: '/etc/php/php.ini'
+    dest: "/etc/php/php.ini"
     line: '{{ item.key }}="{{ item.value }}"'
     regexp: "^{{ item.key }}.*$"
   with_dict: "{{ php_ini }}"
   notify:
     - restart php-fpm
 
-- name: ensure php log dir exists
+- name: ensure php extensions present
+  copy:
+    content: "extension={{ item }}\n"
+    dest: "/etc/php/conf.d/{{ item }}.ini"
+  loop: "{{ php_extensions }}"
+  notify:
+    - restart php-fpm
+
+- name: ensure php directories exist
   file:
-    path: "{{ fpm_log_path }}"
+    path: "{{ item }}"
     state: directory
     owner: "{{ fpm_user }}"
     group: "{{ fpm_group }}"
     recurse: true
+  loop:
+    - "{{ fpm_log_path }}"
+    - "{{ fpm_session_path }}"
 
 - name: place php-fpm configuration file.
   template:

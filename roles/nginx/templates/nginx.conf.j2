@@ -2,29 +2,37 @@ user {{ nginx_user }};
 worker_processes 2;
 
 events {
-    worker_connections 384;
+    worker_connections 1024;
 }
 
 http {
-    access_log /var/log/nginx/access.log;
     default_type application/octet-stream;
-    error_log /var/log/nginx/error.log;
+
+    sendfile on;
+
+    tcp_nodelay on;
+    tcp_nopush on;
+    types_hash_max_size 2048;
+
+
     gzip on;
+    gzip_vary on;
     gzip_disable "MSIE [1-6]\.";
     gzip_min_length 1000;
     gzip_proxied expired no-cache no-store private auth;
     gzip_types text/plain application/xml application/json application/javascript application/octet-stream text/css;
-    gzip_vary on;
-    include mime.types;
-    keepalive_timeout 65;
+
     open_file_cache max=2000 inactive=20s;
     open_file_cache_errors off;
     open_file_cache_min_uses 5;
     open_file_cache_valid 60s;
-    sendfile on;
-    tcp_nodelay on;
-    tcp_nopush on;
-    types_hash_max_size 2048;
+
+    keepalive_timeout 65;
+
+    include mime.types;
+
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
 
     include vhosts.d/*.conf;
 }

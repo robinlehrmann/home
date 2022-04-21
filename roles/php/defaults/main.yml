@@ -1,7 +1,15 @@
 fpm_user: http
 fpm_group: http
-fpm_listen: unix:/run/php-fpm/php-fpm.sock
+fpm_listen: /var/run/php-fpm/php-fpm.sock
+fpm_listen_pass: "unix:{{ fpm_listen }}"
 fpm_log_path: /var/log/php
+fpm_session_path: /var/lib/php/sessions
+
+php_extensions:
+  - apcu
+  - pdo_sqlite
+  - sqlite3
+  - sockets
 
 php_ini:
   'date.timezone': "Europe/Berlin"

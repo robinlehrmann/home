@@ -1,7 +1,8 @@
 ---
 - name: ensure hostname is set
-  hostname:
-    name: '{{ hostname }}'
+  copy:
+    content: "{{ hostname }}\n"
+    dest: /etc/hostname
 
 - name: ensure locale env vars exists
   copy:

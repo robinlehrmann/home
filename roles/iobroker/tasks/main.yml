@@ -3,9 +3,10 @@
   docker_container:
     name: iobroker
     image: buanet/iobroker
-    state: present
-    recreate: yes
-    exposed_ports:
-      - 6379
+    state: started
+    network_mode: host
+    auto_remove: yes
+    devices:
+      - /dev/ttyACM0:/dev/ttyACM0
     volumes:
       - /iobroker

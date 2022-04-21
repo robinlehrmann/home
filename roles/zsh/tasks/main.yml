@@ -6,7 +6,7 @@
 
 - name: oh-my-zsh is installed
   stat:
-    path: /tmp/zsh-install.sh
+    path: /root/.oh-my-zsh
   register: ohmyzsh
 
 - name: download ohmyzsh
@@ -14,11 +14,16 @@
     url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
     dest: /tmp/zsh-install.sh
     mode: '0400'
-  when: ohmyzsh.stat.isdir is defined and ohmyzsh.stat.isdir
+  when: ohmyzsh.stat.exists is defined and not ohmyzsh.stat.exists
 
 - name: install ohmyzsh
-  command: sh /tmp/zsh-install.sh
-  when: ohmyzsh.stat.isdir is defined and ohmyzsh.stat.isdir
+  command: sh /tmp/zsh-install.sh --unattended
+  when: ohmyzsh.stat.exists is defined and not ohmyzsh.stat.exists
+
+- name: remove zsh install script
+  file:
+    path: /tmp/zsh-install.sh
+    state: absent
 
 - name: change shell of root user
   user:

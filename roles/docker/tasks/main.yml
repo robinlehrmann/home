@@ -23,3 +23,8 @@
     dest: /etc/docker/daemon.json
   notify:
     - restart docker
+
+- name: ensure python-docker exists
+  package:
+    name: python-docker
+    state: present
