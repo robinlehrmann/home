@@ -6,7 +6,7 @@ system_packages:
   - 'cups'
   - 'git'
   - 'base-devel'
-  - 'npm'
+  - 'rsync'
 system_services:
   - 'acpid'
   - 'avahi-daemon'
