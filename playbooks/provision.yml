@@ -33,6 +33,11 @@
         name: pihole
         apply:
           become: true
+    - name: ensure zigbee2mqtt is installed
+      include_role:
+        name: zigbee2mqtt
+        apply:
+          become: true
     - name: ensure iobroker is installed
       include_role:
         name: iobroker

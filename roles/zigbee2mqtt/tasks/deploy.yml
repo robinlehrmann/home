@@ -1,0 +1,74 @@
+---
+- name: Initialize the deploy root and gather facts
+  deploy_helper:
+    path: "{{ zigbee2mqtt_home_path }}"
+    shared_path: "{{ zigbee2mqtt_home_path }}/shared"
+
+- name: Create data shared folder
+  file:
+    path: "{{ deploy_helper.shared_path }}/data"
+    state: directory
+    owner: "{{ zigbee2mqtt_user }}"
+
+- name: Create Release path
+  file:
+    path: "{{ deploy_helper.new_release_path }}"
+    state: directory
+
+- name: Fetch latest zigbee2mqtt tarball
+  get_url:
+    url: "https://github.com/Koenkk/zigbee2mqtt/archive/{{ zigbee2mqtt_version }}.tar.gz"
+    dest: "/tmp/zigbee2mqtt.tar.gz"
+
+- name: ensure new tmp zigbee2mqtt dir exists
+  file:
+    path: "/tmp/zigbee2mqtt"
+    state: directory
+
+- name: Unarchive zigbee2mqtt tarball
+  unarchive:
+    src: "/tmp/zigbee2mqtt.tar.gz"
+    dest: "/tmp/zigbee2mqtt"
+    remote_src: true
+
+- name: Add an unfinished file, to allow cleanup on successful finalize
+  file:
+    path: "{{ deploy_helper.new_release_path }}/{{ deploy_helper.unfinished_filename }}"
+    state: touch
+
+- name: move zigbee2mqtt to correct location
+  shell: "rsync -va /tmp/zigbee2mqtt/*/. {{ deploy_helper.new_release_path }}/."
+  args:
+    chdir: "{{ deploy_helper.new_release_path }}"
+
+- name: Ensure data is absent
+  file:
+    path: "{{ deploy_helper.new_release_path }}/data"
+    state: absent
+
+- name: Create symlink to shared data folder
+  file:
+    src: "{{ deploy_helper.shared_path }}/data"
+    dest: "{{ deploy_helper.new_release_path }}/data"
+    state: link
+
+- name: Finalize the deploy, removing the unfinished file and switching the symlink
+  deploy_helper:
+    path: "{{ zigbee2mqtt_home_path }}"
+    release: "{{ deploy_helper.new_release_path }}"
+    state: finalize
+
+- name: Change root to zigbee2mqtt in /home/zigbee2mqtt
+  file:
+    path: "{{ deploy_helper.new_release_path }}"
+    state: directory
+    owner: "{{ zigbee2mqtt_user }}"
+
+- name: install zigbee2mqtt
+  npm:
+    ci: yes
+    production: yes
+    path: "{{ zigbee2mqtt_current_path }}"
+  become: true
+  notify:
+    - restart zigbee2mqtt

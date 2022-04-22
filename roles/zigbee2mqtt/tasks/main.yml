@@ -1,0 +1,40 @@
+---
+- name: create zigbee2mqtt user
+  user:
+    name: "{{ zigbee2mqtt_user }}"
+    groups: uucp
+
+- include: deploy.yml
+
+- name: ensure systemd zigbee2mqtt service exists
+  template:
+    src: zigbee2mqtt.service.j2
+    dest: /usr/lib/systemd/system/zigbee2mqtt.service
+  notify:
+    - restart zigbee2mqtt
+
+- name: daemon reload for zigbee2mqtt.service
+  systemd:
+    daemon_reload: yes
+  notify:
+    - restart zigbee2mqtt
+
+- name: check if zigbee2mqtt configuration.yaml exists
+  stat:
+    path: "{{ zigbee2mqtt_home_path }}/shared/data/configuration.yaml"
+  register: configuration
+
+- name: ensure zigbee2mqtt configuration.yaml exists
+  template:
+    src: "configuration.yaml.j2"
+    dest: "{{ zigbee2mqtt_home_path }}/shared/data/configuration.yaml"
+  when: not configuration.stat.exists
+  notify:
+    - restart zigbee2mqtt
+
+- name: start and enable zigbee2mqtt service.
+  systemd:
+    name: zigbee2mqtt
+    enabled: true
+  notify:
+    - restart zigbee2mqtt

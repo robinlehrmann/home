@@ -5,8 +5,8 @@
     image: buanet/iobroker
     state: started
     network_mode: host
-    auto_remove: yes
+    groups: uucp
     devices:
       - /dev/ttyACM0:/dev/ttyACM0
     volumes:
-      - /iobroker
+      - iobrokerdata:/opt/iobroker

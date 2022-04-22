@@ -1,1 +1,1 @@
-docker_data_root_directory: /docker-data
+docker_data_root_directory: /opt/docker-data

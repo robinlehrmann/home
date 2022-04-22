@@ -1,0 +1,12 @@
+---
+- name: ensure mosquitto exists
+  package:
+    name: mosquitto
+    state: present
+
+- name: start and enable mosquitto service.
+  systemd:
+    name: mosquitto
+    enabled: true
+  notify:
+    - restart mosquitto

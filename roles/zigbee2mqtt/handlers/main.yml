@@ -1,0 +1,6 @@
+---
+- name: restart zigbee2mqtt
+  systemd:
+    name: zigbee2mqtt
+    state: restarted
+  become: true
