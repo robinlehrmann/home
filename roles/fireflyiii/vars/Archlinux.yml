@@ -1,0 +1,4 @@
+---
+project_dir: /srv/http/fireflyiii
+firefly_iii_user: http
+firefly_iii_group: http

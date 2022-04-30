@@ -1,0 +1,39 @@
+---
+- name: ensure fireflyiii upload directory exists
+  file:
+    path: /srv/http/firefly
+    state: directory
+    owner: "{{ firefly_iii_user }}"
+    group: "{{ firefly_iii_group }}"
+
+- name: ensure mysql exists
+  docker_container:
+    name: fireflyiii_database
+    image: mysql:8.0-oracle
+    state: started
+    env:
+      MYSQL_USER: "firefly"
+      MYSQL_PASSWORD: "firefly"
+      MYSQL_DATABASE: "firefly"
+
+- name: generate api key
+  shell: "head /dev/urandom | LC_ALL=C tr -dc 'A-Za-z0-9' | head -c 32 && echo"
+  register: api_key
+
+- name: ensure firefly III docker container exists
+  docker_container:
+    name: fireflyiii
+    image: fireflyiii/core:latest
+    restart: yes
+#    links:
+#      - "fireflyiii:fireflyiii_database"
+    env:
+      APP_KEY: "{{ api_key.stdout }}"
+      DB_CONNECTION: "fireflyiii_database"
+      DB_DATABASE: "firefly"
+      DB_USERNAME: "firefly"
+      DB_PASSWORD: "firefly"
+    published_ports:
+      - 8087:8080
+    volumes:
+      - firefly_iii_upload:/srv/http/firefly
