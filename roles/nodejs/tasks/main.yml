@@ -2,7 +2,7 @@
 - name: ensure nodejs is installed
   package:
     name:
-      - nodejs
+      - nodejs-lts-gallium
       - yarn
       - npm
     state: present

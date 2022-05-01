@@ -7,6 +7,7 @@ system_packages:
   - 'git'
   - 'base-devel'
   - 'rsync'
+  - 'wget'
 system_services:
   - 'acpid'
   - 'avahi-daemon'

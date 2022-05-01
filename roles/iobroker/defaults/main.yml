@@ -1,2 +1,11 @@
 ---
-iobroker_data_directory: /iobroker
+iobroker_data_directory: /opt/iobroker/iobroker-data
+iobroker_port: 8090
+iobroker_adapters:
+  - alexa2
+  - devices
+  - discovery
+  - hue
+  - telegram
+  - tr-064
+  - mqtt

@@ -1,12 +1,46 @@
 ---
-- name: Re-create a iobroker container
-  docker_container:
-    name: iobroker
-    image: buanet/iobroker
-    state: started
-    network_mode: host
-    groups: uucp
-    devices:
-      - /dev/ttyACM0:/dev/ttyACM0
-    volumes:
-      - iobrokerdata:/opt/iobroker
+- name: ensure reuired packages are present
+  package:
+    name: "{{ item }}"
+  loop:
+    - acl
+    - sudo
+    - libcap
+    - base-devel
+    - avahi
+    - nss-mdns
+    - libudev0
+    - pam
+    - pkgconf
+    - curl
+    - unzip
+
+- name: check /opt/iobroker for existence
+  stat:
+    path: /opt/iobroker
+  register: iobroker
+
+- name: get iobroker install.sh
+  get_url:
+    url: https://iobroker.net/install.sh
+    dest: /tmp/install.sh
+  when: iobroker.stat is defined and not iobroker.stat.isdir
+
+- name: execute iobroker install script
+  command: "bash /tmp/install.sh"
+  when: iobroker.stat is defined and not iobroker.stat.isdir
+
+- name: ensure iobroker install.sh is absent
+  file:
+    path: /tmp/install.sh
+    state: absent
+  when: iobroker.stat is defined and not iobroker.stat.isdir
+
+- name: add admin interface
+  command: "/opt/iobroker/iobroker add admin --enabled --port {{ iobroker_port }}"
+  when: iobroker.stat is defined and not iobroker.stat.isdir
+
+- name: ensure adapters are present
+  command: "/opt/iobroker/iobroker add {{ item }}"
+  loop: "{{ iobroker_adapters }}"
+  when: iobroker.stat is defined and not iobroker.stat.isdir

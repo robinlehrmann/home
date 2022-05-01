@@ -8,10 +8,18 @@
   tasks:
     - name: update cache
       package:
-        update_cache: true
+        update_cache: yes
       become: true
     - name: upgrade
       package:
-        upgrade: dist
-        force_apt_get: yes
+        upgrade: yes
       become: true
+    - name: update iobroker
+      command: "iob {{ item }}"
+      loop:
+        - backup
+        - stop
+        - update
+        - fix
+        - upgrade self
+        - start
