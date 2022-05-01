@@ -6,30 +6,33 @@
     owner: "{{ firefly_iii_user }}"
     group: "{{ firefly_iii_group }}"
 
-- name: ensure mysql exists
+- name: ensure mysql container exists
   docker_container:
     name: fireflyiii_database
     image: mysql:8.0-oracle
+    restart: yes
+    command: --default-authentication-plugin=mysql_native_password
     state: started
     env:
       MYSQL_USER: "firefly"
       MYSQL_PASSWORD: "firefly"
       MYSQL_DATABASE: "firefly"
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
 
 - name: generate api key
   shell: "head /dev/urandom | LC_ALL=C tr -dc 'A-Za-z0-9' | head -c 32 && echo"
   register: api_key
 
-- name: ensure firefly III docker container exists
+- name: ensure firefly iii docker container exists
   docker_container:
     name: fireflyiii
     image: fireflyiii/core:latest
     restart: yes
-#    links:
-#      - "fireflyiii:fireflyiii_database"
+    state: started
     env:
       APP_KEY: "{{ api_key.stdout }}"
-      DB_CONNECTION: "fireflyiii_database"
+      DB_CONNECTION: "mysql"
+      DB_HOST: "fireflyiii_database"
       DB_DATABASE: "firefly"
       DB_USERNAME: "firefly"
       DB_PASSWORD: "firefly"
@@ -37,3 +40,10 @@
       - 8087:8080
     volumes:
       - firefly_iii_upload:/srv/http/firefly
+
+- name: ensure docker network exists
+  docker_network:
+    name: fireflyiii
+    connected:
+      - fireflyiii
+      - fireflyiii_database
