@@ -3,7 +3,7 @@ fpm_group: http
 fpm_listen: /var/run/php-fpm/php-fpm.sock
 fpm_listen_pass: "unix:{{ fpm_listen }}"
 fpm_log_path: /var/log/php
-fpm_session_path: /var/lib/php/sessions
+fpm_session_path: /tmp/php-sessions
 
 php_extensions:
   - apcu
@@ -20,7 +20,7 @@ php_ini:
   'post_max_size': 2048M
   'display_error': 'Off'
   'session.name': 'sid'
-  'session.use_cookies': 0
+  'session.use_cookies': 1
   'session.use_trans_sid': 0
   'url_rewriter.tags':
   'magic_quotes_runtime': 0

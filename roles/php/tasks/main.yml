@@ -33,6 +33,7 @@
 - name: ensure php directories exist
   file:
     path: "{{ item }}"
+    mode: 0755
     state: directory
     owner: "{{ fpm_user }}"
     group: "{{ fpm_group }}"
@@ -52,3 +53,14 @@
   systemd:
     name: php-fpm
     enabled: true
+
+- name: ensure composer exists
+  package:
+    name: composer
+    state: present
+
+- name: ensure composer cache is readable
+  file:
+    path: "/srv/http/.cache/composer"
+    recurse: true
+    owner: "{{ fpm_user }}"
