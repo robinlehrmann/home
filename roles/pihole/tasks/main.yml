@@ -1,7 +1,13 @@
 ---
+- name: check pihole for existence
+  stat:
+    path: /srv/http/pihole
+  register: pihole
+
 - name: ensure pihole is installed
   become_user: yay
   command: yay -S pi-hole-server --noconfirm
+  when: pihole.stat.isdir is defined and not pihole.stat.isdir
 
 - name: ensure read and write permissions are granted
   lineinfile:
