@@ -1,6 +1,7 @@
 ---
 zigbee2mqtt_user: "zigbee2mqtt"
-zigbee2mqtt_home_path: "/opt/{{ zigbee2mqtt_user }}"
-zigbee2mqtt_current_path: "{{ zigbee2mqtt_home_path }}/current"
+zigbee2mqtt_project_path: "/opt/{{ zigbee2mqtt_user }}"
+zigbee2mqtt_current_path: "{{ zigbee2mqtt_project_path }}/current"
+zigbee2mqtt_log_path: /var/log/zigbee2mqtt
 zigbee2mqtt_version: 1.25.0
 zigbee2mqtt_base_topic: "bocholt"

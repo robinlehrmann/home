@@ -4,7 +4,17 @@
     name: "{{ zigbee2mqtt_user }}"
     groups: uucp
 
+- name: ensure correct version is present
+  lineinfile:
+    path: "{{ zigbee2mqtt_project_path }}/current/package.json"
+    regexp: '^  \"version\": \"{{ zigbee2mqtt_version }}\"'
+    state: absent
+  check_mode: yes
+  changed_when: false
+  register: version
+
 - include: deploy.yml
+  when: not version.found is defined or not version.found
 
 - name: ensure systemd zigbee2mqtt service exists
   template:
@@ -21,13 +31,20 @@
 
 - name: check if zigbee2mqtt configuration.yaml exists
   stat:
-    path: "{{ zigbee2mqtt_home_path }}/shared/data/configuration.yaml"
+    path: "{{ zigbee2mqtt_project_path }}/shared/data/configuration.yaml"
   register: configuration
+
+- name: ensure log directory exists and is writeable
+  file:
+    path: "{{ zigbee2mqtt_log_path }}"
+    state: directory
+    owner: "{{ zigbee2mqtt_user }}"
 
 - name: ensure zigbee2mqtt configuration.yaml exists
   template:
     src: "configuration.yaml.j2"
-    dest: "{{ zigbee2mqtt_home_path }}/shared/data/configuration.yaml"
+    dest: "{{ zigbee2mqtt_project_path }}/shared/data/configuration.yaml"
+    owner: "{{ zigbee2mqtt_user }}"
   when: not configuration.stat.exists
   notify:
     - restart zigbee2mqtt

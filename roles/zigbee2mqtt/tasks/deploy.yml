@@ -1,8 +1,8 @@
 ---
 - name: Initialize the deploy root and gather facts
   deploy_helper:
-    path: "{{ zigbee2mqtt_home_path }}"
-    shared_path: "{{ zigbee2mqtt_home_path }}/shared"
+    path: "{{ zigbee2mqtt_project_path }}"
+    shared_path: "{{ zigbee2mqtt_project_path }}/shared"
 
 - name: Create data shared folder
   file:
@@ -54,11 +54,11 @@
 
 - name: Finalize the deploy, removing the unfinished file and switching the symlink
   deploy_helper:
-    path: "{{ zigbee2mqtt_home_path }}"
+    path: "{{ zigbee2mqtt_project_path }}"
     release: "{{ deploy_helper.new_release_path }}"
     state: finalize
 
-- name: Change root to zigbee2mqtt in /home/zigbee2mqtt
+- name: Change root to zigbee2mqtt in project path
   file:
     path: "{{ deploy_helper.new_release_path }}"
     state: directory

@@ -3,7 +3,7 @@ Description=zigbee2mqtt
 After=network.target
 
 [Service]
-ExecStart=/bin/bash -c 'npm start'
+ExecStart=/usr/bin/sh -c 'npm start'
 WorkingDirectory={{ zigbee2mqtt_current_path }}
 StandardOutput=inherit
 StandardError=inherit
