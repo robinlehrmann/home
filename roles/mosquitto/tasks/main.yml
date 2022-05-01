@@ -10,3 +10,10 @@
     enabled: true
   notify:
     - restart mosquitto
+
+- name: ensure configuration exists as expected
+  lineinfile:
+      dest: "/etc/mosquitto/mosquitto.conf"
+      line: '{{ item.key }} {{ item.value }}'
+      regexp: "^{{ item.key }}.*$"
+    with_dict: "{{ mosquitto_conf }}"
