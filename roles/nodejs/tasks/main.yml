@@ -6,3 +6,9 @@
       - yarn
       - npm
     state: present
+
+- name: ensure typescript is installed
+  npm:
+    name: typescript
+    state: present
+    global: true

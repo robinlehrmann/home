@@ -1,0 +1,19 @@
+---
+- name: ensure ruby is installed
+  package:
+    name:
+      - ruby
+      - ruby-irb
+    state: present
+
+- name: ensure fastlane is installed
+  gem:
+    name: fastlane
+    state: present
+    norc: true
+
+- name: ensure ruby executables are in PATH
+  lineinfile:
+    path: /root/.zshrc
+    regexp: '^export PATH'
+    value: 'export PATH="$PATH:/root/.local/share/gem/ruby/3.0.0/bin"'

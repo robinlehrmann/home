@@ -43,9 +43,8 @@
         name: iobroker
         apply:
           become: true
-    - name: ensure fireflyiii is installed
+    - name: ensure fastlane is installed
       include_role:
-        name: fireflyiii
-        vars_from: "{{ ansible_distribution }}"
+        name: fastlane
         apply:
           become: true
