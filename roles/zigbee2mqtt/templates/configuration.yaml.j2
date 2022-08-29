@@ -19,7 +19,7 @@ mqtt:
 
 # Required: serial settings
 serial:
-    port: /dev/ttyACM0
+    port: /dev/ttyUSB0
     disable_led: true
 
 frontend:
@@ -36,9 +36,3 @@ advanced:
 
 experimental:
     output: 'attribute_and_json'
-
-devices:
-{% for ieee_address, friendly_name in zigbee2mqtt_device_map.items() %}
-    '{{ ieee_address }}':
-        friendly_name: {{ friendly_name }}
-{% endfor %}

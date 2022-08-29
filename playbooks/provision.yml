@@ -48,3 +48,9 @@
         name: fastlane
         apply:
           become: true
+#    - name: ensure fireflyiii is installed
+#      include_role:
+#        name: fireflyiii
+#        vars_from: "{{ ansible_distribution }}"
+#        apply:
+#          become: true

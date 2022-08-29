@@ -30,7 +30,7 @@
   notify:
     - restart ssh server
 
-- include: "{{ ansible_distribution }}.yml"
+- include_tasks: "{{ ansible_distribution }}.yml"
 
 - name: ensure required packages are installed
   package:

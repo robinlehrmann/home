@@ -13,7 +13,7 @@
   changed_when: false
   register: version
 
-- include: deploy.yml
+- include_tasks: deploy.yml
   when: not version.found is defined or not version.found
 
 - name: ensure systemd zigbee2mqtt service exists
