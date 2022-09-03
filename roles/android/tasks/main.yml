@@ -1,0 +1,34 @@
+---
+- name: ensure packages are installed
+  package:
+    name:
+      - python2
+      - perl
+      - git
+      - gnupg
+      - flex
+      - bison
+      - gperf
+      - zip
+      - unzip
+      - sdl
+      - squashfs-tools
+      - ncurses
+      - libpng
+      - zlib
+      - libusb
+      - libusb-compat
+      - readline
+      - inetutils
+      - schedtool
+      - jdk8-openjdk
+      - gcc-multilib
+      - gcc-libs-multilib
+      - libtool-multilib
+    state: present
+
+- name: ensure android-sdk is installed
+  command: yay -S android-sdk-cmdline-tools-latest
+
+- name: ensure android build tools are installed
+  command: yay -S android-sdk-build-tools

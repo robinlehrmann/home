@@ -10,6 +10,9 @@
 - php
 - pihole
 - zigbee2mqtt
+- onedev
+- android
+- fastlane
 
 execute the following make target:
 `make provision`

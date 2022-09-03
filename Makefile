@@ -9,6 +9,9 @@ provision:                                               ## provision home serve
 update:                                                  ## update home server
 	$(ANSIBLE_PLAYBOOK_CMD) playbooks/update.yml
 
+connect:                                                 ## connect to home server
+	ssh -l root -p 10022 192.168.178.43
+
 devbox-setup:                                            ## setup devbox
 	vagrant up
 

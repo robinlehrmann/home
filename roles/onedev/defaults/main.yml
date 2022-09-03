@@ -1,0 +1,6 @@
+---
+onedev_user: onedev
+onedev_version: 7.4.25
+onedev_release_url: "https://code.onedev.io/downloads/projects/160/builds/2925/artifacts/onedev-7.4.25.zip"
+onedev_install_path: "/opt/onedev"
+onedev_instance_path: "{{ onedev_install_path }}/onedev-{{ onedev_version }}"

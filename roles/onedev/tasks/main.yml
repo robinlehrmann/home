@@ -1,0 +1,71 @@
+---
+- name: ensure onedev user exists
+  user:
+    name: "{{ onedev_user }}"
+    shell: /usr/bin/nologin
+    state: present
+
+- name: ensure required packages are installed
+  package:
+    name:
+      - fontconfig
+      - jdk-openjdk
+      - git
+      - curl
+    state: present
+
+- name: check for existing installation
+  stat:
+    path: "{{ onedev_install_path }}"
+  register: onedev_installation
+
+- name: ensure onedev package is downloaded
+  get_url:
+    url: "{{ onedev_release_url }}"
+    dest: "/tmp/onedev.zip"
+  when: not onedev_installation.stat.exists
+
+- name: ensure onedev install_path exists
+  file:
+    path: "{{ onedev_install_path }}"
+    state: directory
+  when: not onedev_installation.stat.exists
+
+- name: extract package to install_path
+  unarchive:
+    src: "/tmp/onedev.zip"
+    dest: "{{ onedev_install_path }}"
+    remote_src: true
+  when: not onedev_installation.stat.exists
+
+- name: ensure onedev run with correct user
+  lineinfile:
+    path: "{{ onedev_instance_path }}/bin/server.sh"
+    regexp: "^#RUN_AS_USER"
+    line: "RUN_AS_USER={{ onedev_user }}"
+  when: not onedev_installation.stat.exists
+  notify:
+    - restart onedev
+
+- name: ensure onedev user is owning onedev installation
+  file:
+    path: "{{ onedev_instance_path }}"
+    owner: "{{ onedev_user }}"
+    recurse: true
+  notify:
+    - restart onedev
+
+- name: ensure onedev service is installed
+  shell: "{{ onedev_instance_path }}/bin/server.sh install"
+  when: not onedev_installation.stat.exists
+  notify:
+    - restart onedev
+
+- name: ensure onedev is enabled
+  systemd:
+    name: onedev
+    enabled: true
+    daemon_reload: true
+    state: started
+  notify:
+    - restart onedev

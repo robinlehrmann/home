@@ -48,6 +48,16 @@
         name: fastlane
         apply:
           become: true
+    - name: ensure onedev is installed
+      include_role:
+        name: onedev
+        apply:
+          become: true
+    - name: ensure android is installed
+      include_role:
+        name: android
+        apply:
+          become: true
 #    - name: ensure fireflyiii is installed
 #      include_role:
 #        name: fireflyiii
