@@ -2,7 +2,7 @@
 ---
 
 - docker
-- fireflyiii
+- fastlane
 - iobroker
 - mosquitto
 - nginx
