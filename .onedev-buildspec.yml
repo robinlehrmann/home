@@ -1,0 +1,26 @@
+version: 17
+jobs:
+- name: provision
+  steps:
+  - !CheckoutStep
+    name: Clone project
+    cloneCredential: !DefaultCredential {}
+    withLfs: false
+    withSubmodules: false
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  - !RunContainerStep
+    name: Run ansible
+    image: ansible/ansible
+    args: ansible-playbook -u root -i inventory/home playbooks/provision.yml
+    useTTY: false
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  triggers:
+  - !BranchUpdateTrigger
+    branches: master
+    projects: home
+  retryCondition: never
+  maxRetries: 3
+  retryDelay: 30
+  cpuRequirement: 250
+  memoryRequirement: 256
+  timeout: 3600
