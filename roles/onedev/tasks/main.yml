@@ -12,6 +12,7 @@
       - jdk-openjdk
       - git
       - curl
+      - ttf-dejavu
     state: present
 
 - name: check for existing installation
