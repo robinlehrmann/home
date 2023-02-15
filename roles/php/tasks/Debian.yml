@@ -1,0 +1,70 @@
+---
+- name: ensure prerequisite packages are present
+  apt:
+    name:
+      - ca-certificates
+      - software-properties-common
+      - apt-transport-https
+      - lsb-release
+    state: present
+
+- name: ensure sury apt key exists
+  apt_key:
+    url: https://packages.sury.org/php/apt.gpg
+    keyring: /etc/apt/trusted.gpg.d/sury.gpg
+    state: present
+
+- name: ensure sury apt repository exists
+  apt_repository:
+    repo: 'deb [signed-by=/etc/apt/trusted.gpg.d/sury.gpg] https://packages.sury.org/php/ {{ ansible_distribution_release }} main'
+    state: present
+
+- name: update repository cache
+  apt:
+    update_cache: true
+
+- name: ensure php.ini cli settings.
+  lineinfile:
+    dest: "/etc/php/8.1/cli/php.ini"
+    line: '{{ item.key }}="{{ item.value }}"'
+    regexp: "^{{ item.key }}.*$"
+  with_dict: "{{ php_ini }}"
+  notify:
+    - restart php-fpm
+
+- name: ensure php.ini fpm settings.
+  lineinfile:
+    dest: "/etc/php/8.1/fpm/php.ini"
+    line: '{{ item.key }}="{{ item.value }}"'
+    regexp: "^{{ item.key }}.*$"
+  with_dict: "{{ php_ini }}"
+  notify:
+    - restart php-fpm
+
+- name: ensure php extension symlinks exists for fpm
+  file:
+    src: "/etc/php/8.1/mods-available/{{ item }}.ini"
+    dest: "/etc/php/8.1/fpm/conf.d/20-{{ item }}.ini"
+    state: link
+    force: yes
+  loop: "{{ php_extensions }}"
+
+- name: ensure php extension symlinks exists for cli
+  file:
+    src: "/etc/php/8.1/mods-available/{{ item }}.ini"
+    dest: "/etc/php/8.1/cli/conf.d/20-{{ item }}.ini"
+    state: link
+    force: yes
+  loop: "{{ php_extensions }}"
+
+- name: place php-fpm configuration file.
+  template:
+    src: fpm-www.conf.j2
+    dest: /etc/php/8.1/fpm/pool.d/www.conf
+  notify:
+    - restart php-fpm
+
+- name: start and enable php-fpm service.
+  systemd:
+    name: php8.1-fpm
+    enabled: true

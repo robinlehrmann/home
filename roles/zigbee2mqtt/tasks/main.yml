@@ -1,8 +1,16 @@
 ---
+- name: ensure rsync and make exists
+  package:
+    name:
+      - rsync
+      - make
+      - g++
+    state: present
+
 - name: create zigbee2mqtt user
   user:
     name: "{{ zigbee2mqtt_user }}"
-    groups: uucp
+    groups: dialout
 
 - name: ensure correct version is present
   lineinfile:
@@ -29,6 +37,8 @@
   notify:
     - restart zigbee2mqtt
 
+- include_tasks: deploy.yml
+
 - name: check if zigbee2mqtt configuration.yaml exists
   stat:
     path: "{{ zigbee2mqtt_project_path }}/shared/data/configuration.yaml"
@@ -48,6 +58,14 @@
   when: not configuration.stat.exists
   notify:
     - restart zigbee2mqtt
+
+- name: ensure project directory is writeable
+  file:
+    path: "{{ zigbee2mqtt_project_path }}"
+    state: directory
+    owner: "{{ zigbee2mqtt_user }}"
+    group: "{{ zigbee2mqtt_user }}"
+    recurse: yes
 
 - name: start and enable zigbee2mqtt service.
   systemd:

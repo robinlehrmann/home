@@ -1,0 +1,73 @@
+---
+- name: Installing needed software
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - java-runtime-headless
+    - fontconfig
+    - binutils
+    - rsync
+
+- name: Creating system user unifi
+  user:
+    name: unifi
+    state: present
+
+- name: Creating temporary directory
+  file:
+    path: "{{ unifi_temp_path }}"
+    state: directory
+
+- name: Downloading Debian package from Ubiquiti
+  get_url:
+    url: "http://dl.ubnt.com/unifi/{{ unifi_version }}/unifi_sysvinit_all.deb"
+    dest: "{{ unifi_temp_path }}/unifi.deb"
+
+- name: Extracting package
+  shell: "chdir={{ unifi_temp_path }} ar -x unifi.deb"
+  changed_when: false
+
+- name: Extracting data.tar.xz
+  shell: "chdir={{ unifi_temp_path }} tar xf data.tar.xz"
+  args:
+    warn: no
+  changed_when: false
+
+- name: Copying systemd unit file
+  template:
+    src: systemd-unit-file.j2
+    dest: /etc/systemd/system/unifi.service
+    owner: root
+    group: root
+
+- name: Copying UniFi files
+  shell: "rsync -ar {{ unifi_temp_path }}/usr/lib/* /usr/lib/"
+  changed_when: false
+
+- name: Setting permissions
+  file:
+    path: /usr/lib/unifi
+    owner: unifi
+    group: unifi
+    state: directory
+    recurse: true
+#
+#- name: Linking mongod
+#  file:
+#      src: /usr/bin/mongod
+#      dest: /usr/lib/unifi/bin/mongod
+#      state: link
+
+- name: Clean up temp directory
+  file:
+    path: "{{ unifi_temp_path }}"
+    state: absent
+
+- name: Start unifi
+  systemd:
+    name: unifi
+    state: started
+    enabled: true
+    masked: false
+    daemon_reload: true

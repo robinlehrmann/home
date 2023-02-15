@@ -68,7 +68,7 @@
   npm:
     ci: yes
     production: yes
-    path: "{{ zigbee2mqtt_current_path }}"
+    path: "{{ zigbee2mqtt_project_path }}/current"
   become: true
   notify:
     - restart zigbee2mqtt

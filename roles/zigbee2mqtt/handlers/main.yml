@@ -3,4 +3,3 @@
   systemd:
     name: zigbee2mqtt
     state: restarted
-  become: true

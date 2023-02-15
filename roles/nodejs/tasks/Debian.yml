@@ -1,0 +1,3 @@
+---
+- name: ensure nodejs exists in version 18
+  shell: curl -fsSL https://deb.nodesource.com/setup_18.x | bash -

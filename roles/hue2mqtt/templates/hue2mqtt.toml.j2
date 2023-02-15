@@ -1,0 +1,15 @@
+[mqtt]
+host = "{{ ansible_default_ipv4.address }}"
+port = 1883
+enable_tls = false
+force_protocol_version_3_1 = true
+
+enable_auth = false
+username = ""
+password = ""
+
+topic_prefix = "{{ hue2mqtt_base_topic }}"
+
+[hue]
+ip = "192.168.178.28"
+username = "xSof2q8MD-6sw5DYlRDy0mTtHaRDGgRaPZPqXTYt"

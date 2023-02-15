@@ -1,0 +1,13 @@
+[Unit]
+Description=hue2mqtt
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/hue2mqtt -c /etc/hue2mqtt.toml
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User={{ hue2mqtt_user }}
+
+[Install]
+WantedBy=multi-user.target

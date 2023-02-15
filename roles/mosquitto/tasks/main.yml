@@ -1,4 +1,6 @@
 ---
+- include_tasks: "{{ ansible_distribution }}.yml"
+
 - name: ensure mosquitto exists
   package:
     name: mosquitto
@@ -17,3 +19,5 @@
     line: '{{ item.key }} {{ item.value }}'
     regexp: "^{{ item.key }}.*$"
   with_dict: "{{ mosquitto_conf }}"
+  notify:
+    - restart mosquitto

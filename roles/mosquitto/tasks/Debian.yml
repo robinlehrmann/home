@@ -1,0 +1,15 @@
+---
+- name: ensure apt-key for mosquitto exists
+  apt_key:
+    url: https://repo.mosquitto.org/debian/mosquitto-repo.gpg.key
+    keyring: /etc/apt/trusted.gpg.d/mosquitto.gpg
+    state: present
+
+- name: ensure mosquitto apt repository exists
+  apt_repository:
+    repo: 'deb [signed-by=/etc/apt/trusted.gpg.d/mosquitto.gpg] https://repo.mosquitto.org/debian {{ ansible_distribution_release }} main'
+    state: present
+
+- name: update repository cache
+  apt:
+    update_cache: true

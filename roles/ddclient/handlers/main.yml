@@ -1,0 +1,5 @@
+---
+- name: restart ddclient
+  systemd:
+    name: ddclient
+    state: restarted

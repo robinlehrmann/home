@@ -1,0 +1,33 @@
+#
+# Managed by ansible
+# Role: ansible-role-unifi-arch
+#
+[Unit]
+Description=Ubiquiti UniFi Server
+After=network-online.target
+
+[Service]
+User=unifi
+Environment=NAME="unifi"
+Environment=DESC="Ubiquiti UniFi Controller"
+Environment=BASEDIR="/usr/lib/unifi"
+Environment=MAINCLASS="com.ubnt.ace.Launcher"
+Environment=PIDFILE="/var/run/${NAME}/${NAME}.pid"
+Environment=MONGOPORT=27117
+Environment=CODEPATH=${BASEDIR}
+Environment=DATALINK=${BASEDIR}/data
+Environment=LOGLINK=${BASEDIR}/logs
+Environment=RUNLINK=${BASEDIR}/run
+Environment=DATADIR=/var/lib/${NAME}
+Environment=LOGDIR=/var/log/${NAME}
+Environment=RUNDIR=/var/run/${NAME}
+Environment=MONGOLOCK="${DATAPATH}/db/mongod.lock"
+Environment=JVM_MAX_HEAP_SIZE=1024M
+Environment=ENABLE_UNIFI=yes
+Environment=JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Dunifi.datadir=${DATADIR} -Dunifi.logdir=${LOGDIR} -Dunifi.rundir=${RUNDIR} -Djava.awt.headless=true -Dfile.encoding=UTF-8"
+WorkingDirectory=/usr/lib/unifi
+ExecStart=/usr/bin/java -jar /usr/lib/unifi/lib/ace.jar start
+ExecStop=/usr/bin/java -jar /usr/lib/unifi/lib/ace.jar stop
+
+[Install]
+WantedBy=multi-user.target

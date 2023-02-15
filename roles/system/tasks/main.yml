@@ -4,11 +4,6 @@
     content: "{{ hostname }}\n"
     dest: /etc/hostname
 
-- name: ensure locale env vars exists
-  copy:
-    content: 'LANG=de_DE.UTF-8'
-    dest: /etc/locale.conf
-
 - name: ensure locale exists
   locale_gen:
     name: 'de_DE.UTF-8'

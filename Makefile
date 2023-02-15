@@ -10,7 +10,7 @@ update:                                                  ## update home server
 	$(ANSIBLE_PLAYBOOK_CMD) playbooks/update.yml
 
 connect:                                                 ## connect to home server
-	ssh -l root -p 10022 192.168.178.43
+	ssh -l root -p 10022 192.168.1.111
 
 devbox-setup:                                            ## setup devbox
 	vagrant up

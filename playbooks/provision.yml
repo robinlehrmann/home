@@ -1,5 +1,7 @@
 ---
 - hosts: home
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   pre_tasks:
     - name: Wait 300 seconds, but only start checking after 5 seconds
       wait_for_connection:
@@ -23,44 +25,60 @@
         name: zsh
         apply:
           become: true
-    - name: ensure docker is installed
-      include_role:
-        name: docker
-        apply:
-          become: true
+#    - name: ensure docker is installed
+#      include_role:
+#        name: docker
+#        vars_from: "{{ ansible_distribution }}"
+#        apply:
+#          become: true
+#    - name: ensure zigbee2mqtt is installed
+#      include_role:
+#        name: zigbee2mqtt
+#        apply:
+#          become: true
     - name: ensure pihole is installed
       include_role:
         name: pihole
         apply:
           become: true
-    - name: ensure zigbee2mqtt is installed
-      include_role:
-        name: zigbee2mqtt
-        apply:
-          become: true
-    - name: ensure iobroker is installed
-      include_role:
-        name: iobroker
-        apply:
-          become: true
-    - name: ensure fastlane is installed
-      include_role:
-        name: fastlane
-        apply:
-          become: true
-    - name: ensure onedev is installed
-      include_role:
-        name: onedev
-        apply:
-          become: true
-    - name: ensure android is installed
-      include_role:
-        name: android
-        apply:
-          become: true
+#    - name: ensure iobroker is installed
+#      include_role:
+#        name: iobroker
+#        apply:
+#          become: true
+#    - name: ensure fastlane is installed
+#      include_role:
+#        name: fastlane
+#        apply:
+#          become: true
+#    - name: ensure onedev is installed
+#      include_role:
+#        name: onedev
+#        apply:
+#          become: true
+#    - name: ensure android is installed
+#      include_role:
+#        name: android
+#        apply:
+#          become: true
 #    - name: ensure fireflyiii is installed
 #      include_role:
 #        name: fireflyiii
 #        vars_from: "{{ ansible_distribution }}"
+#        apply:
+#          become: true
+#    - name: ensure ddclient is installed
+#      include_role:
+#        name: ddclient
+#        apply:
+#          become: true
+#    - name: ensure hue2mqtt is installed
+#      include_role:
+#        name: hue2mqtt
+#        apply:
+#          become: true
+#    - name: ensure unifi is installed
+#      include_role:
+#        name: unifi
 #        apply:
 #          become: true

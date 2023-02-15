@@ -1,6 +1,5 @@
 ---
 mosquitto_conf:
   'listener': 1883
-  'bind_interface': eno1
   'connection_messages': 'true'
   'allow_anonymous': 'true'

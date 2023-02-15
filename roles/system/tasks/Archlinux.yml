@@ -1,4 +1,9 @@
 ---
+- name: ensure locale env vars exists
+  copy:
+    content: 'LANG=de_DE.UTF-8'
+    dest: /etc/locale.conf
+
 - name: ensure alarm user is absent.
   user:
     name: alarm

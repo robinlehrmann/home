@@ -1,0 +1,6 @@
+---
+- name: restart hue2mqtt
+  systemd:
+    name: hue2mqtt
+    state: restarted
+  become: true

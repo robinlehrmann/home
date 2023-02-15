@@ -4,11 +4,11 @@ After=network.target
 
 [Service]
 ExecStart=/usr/bin/sh -c 'npm start'
-WorkingDirectory={{ zigbee2mqtt_current_path }}
+WorkingDirectory={{ zigbee2mqtt_project_path }}/current
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
-User=zigbee2mqtt
+User={{ zigbee2mqtt_user }}
 
 [Install]
 WantedBy=multi-user.target

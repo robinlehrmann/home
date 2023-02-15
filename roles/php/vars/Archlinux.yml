@@ -1,2 +1,12 @@
 ---
+fpm_listen: /var/run/php-fpm/php-fpm.sock
+fpm_user: http
+fpm_group: http
+php_packages:
+  - php
+  - php-fpm
+  - php-intl
+  - php-gd
+  - php-apcu
+php_service_name: php-fpm
 composer_cache_path: /srv/http/.cache/composer

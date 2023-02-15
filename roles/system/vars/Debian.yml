@@ -1,6 +1,6 @@
 ---
 system_packages:
   - 'git'
-  - 'npm'
   - 'nano'
+  - 'net-tools'
 system_services: []

@@ -1,7 +1,9 @@
 ---
+- include_tasks: "{{ ansible_distribution }}.yml"
+
 - name: ensure docker is installed
   package:
-    name: docker
+    name: "{{ docker_packages }}"
     state: present
 
 - name: ensure docker service is enabled

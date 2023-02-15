@@ -1,7 +1,7 @@
 ---
 - name: Install nginx packages.
   package:
-    name: nginx-mainline
+    name: '{{ nginx_package }}'
     state: present
 
 - name: ensure vhost conf dir

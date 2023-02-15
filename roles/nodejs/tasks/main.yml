@@ -1,10 +1,13 @@
 ---
+- include_vars: "{{ ansible_distribution }}.yml"
+- include_tasks: "{{ ansible_distribution }}.yml"
+
 - name: ensure nodejs is installed
   package:
     name:
-      - nodejs-lts-gallium
-      - yarn
-      - npm
+      - "{{ nodejs_package }}"
+#      - yarn
+#      - npm
     state: present
 
 - name: ensure typescript is installed

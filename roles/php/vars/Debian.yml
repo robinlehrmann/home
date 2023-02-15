@@ -1,2 +1,12 @@
 ---
+fpm_listen: /var/run/php/php-fpm.sock
+fpm_user: www-data
+fpm_group: www-data
+php_packages:
+  - php8.1
+  - php8.1-fpm
+  - php8.1-intl
+  - php8.1-gd
+  - php8.1-apcu
+php_service_name: php8.1-fpm
 composer_cache_path: /var/www/.cache/composer

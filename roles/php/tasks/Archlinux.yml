@@ -1,0 +1,29 @@
+---
+- name: ensure php.ini settings.
+  lineinfile:
+    dest: "/etc/php/php.ini"
+    line: '{{ item.key }}="{{ item.value }}"'
+    regexp: "^{{ item.key }}.*$"
+  with_dict: "{{ php_ini }}"
+  notify:
+    - restart php-fpm
+
+- name: ensure php extensions present
+  copy:
+    content: "extension={{ item }}\n"
+    dest: "/etc/php/conf.d/{{ item }}.ini"
+  loop: "{{ php_extensions }}"
+  notify:
+    - restart php-fpm
+
+- name: place php-fpm configuration file.
+  template:
+    src: fpm-www.conf.j2
+    dest: /etc/php/php-fpm.d/www.conf
+  notify:
+    - restart php-fpm
+
+- name: start and enable php-fpm service.
+  systemd:
+    name: php-fpm
+    enabled: true

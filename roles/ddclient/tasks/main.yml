@@ -1,0 +1,13 @@
+---
+- name: ensure ddclient is installed
+  package:
+    name: ddclient
+    state: present
+
+- name: ensure ddclient service is started
+  systemd:
+    name: ddclient
+    state: started
+    enabled: true
+  notify:
+    - restart ddclient
